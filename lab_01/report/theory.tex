@@ -1,0 +1,123 @@
+%\chapter{Теоретические сведения}
+
+\textbf{Цель работы:} Изучить методы решения задачи Коши для ОДУ,
+применив приближенный аналитический метод Пикара и численный метод
+Эйлера в явном и неявном вариантах.
+
+\textbf{Задание:} Решить уравнение (формула \ref{eq:task}),
+не имеющее аналитического решения.
+
+\begin{equation}\label{eq:task}
+    \begin{cases}
+        u'(x) = f(x,u) \\
+        u(\xi) = y
+    \end{cases}
+\end{equation}
+
+Уравнение можно решить \textbf{методом Пикара} (формула \ref{eq:pik})
+
+\begin{equation}\label{eq:pik}
+    \begin{matrix}
+        y^{(s)}(x) = \eta + \int_0^x f(t, y^{(s-1)}(t)) dt \\
+        \\
+        y^{(0)} = \eta \\
+    \end{matrix}
+\end{equation}
+
+Для задачи получим 4 приближения (формулы \ref{eq:p1}, \ref{eq:p2},
+\ref{eq:p3}, \ref{eq:p4})
+
+\begin{equation}\label{eq:p1}
+    y^{(1)} = \frac{x^3}{3}
+\end{equation}
+
+\begin{equation}\label{eq:p2}
+    y^{(2)} = \frac{x^3}{3} + \frac{x^7}{21}
+\end{equation}
+
+\begin{equation}\label{eq:p3}
+    y^{(3)} = \frac{x^3}{3} + \frac{x^7}{21} + \frac{2 \cdot x^8}{2079}
+    + \frac{x^{15}}{59535}
+\end{equation}
+
+\begin{multline}\label{eq:p4}
+        y^{(4)} = \frac{x^3}{3} + \frac{x^7}{21} +
+        \frac{2 \cdot x^8}{2079} +
+        \frac{x^{15}}{59535} +
+        \frac{2 \cdot x^{15}}{93555} +
+        \frac{2 \cdot x^{19}}{3393495} + \\
+        \frac{2 \cdot x^{29}}{2488563} +
+        \frac{2 \cdot x^{23}}{86266215} +
+        \frac{x^{23}}{99411543} +
+        \frac{2 \cdot x^{27}}{3341878155} +
+        \frac{x^{31}}{109876902975}
+\end{multline}
+
+Также уравнение решается \textbf{численным методом Эйлера}
+
+Явная схема (формула \ref{eq:ex})
+
+\begin{equation}\label{eq:ex}
+    y_{n+1} = y_n + h \cdot f(x_n, y_n)
+\end{equation}
+
+Неявная схема (формула \ref{eq:im})
+
+\begin{equation}\label{eq:im}
+    y_{n+1} = y_n + h \cdot (f(x_{n+1}, y_{n+1}))
+\end{equation}
+
+Ниже приведены листинги реализованных методов:
+
+\begin{lstlisting}[caption=Метод Пикара]
+def methodPicara(valuesX, y_0):
+    def y_1(x):
+        return pow(x, 3) / 3.0
+
+    def y_2(x):
+        return y_1(x) + pow(x, 7) / 63.0
+
+    def y_3(x):
+        return  y_2(x) + 2 * pow(x, 11) / 2079.0 + pow(x, 15) / 59535.0
+
+    def y_4(x):
+        return y_3(x) + 2 * pow(x, 15) / 93555.0 + 82 * pow(x, 19) / 37328445.0 + 662 * pow(x, 23) / 10438212015.0 + \
+                4 * pow(x, 27) / 3341878155.0 + pow(x, 31) / 109876902975.0
+
+    result = [[y_0, y_0]]
+
+    for i in range(1, len(valuesX)):
+        result.append([y_3(valuesX[i]), y_4(valuesX[i])])
+
+    return result
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Явная схема метода Эйлера]
+def methodEulerExplicit(valuesX, step, y):
+    result = []
+
+    for i in range(len(valuesX)):
+        if (y == float('inf')):
+            break
+        y += step * (y * y + valuesX[i] * valuesX[i])
+        result.append(y)
+
+    return result
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Неявная схема метода Эйлера]
+def methodEulerNExplicit(valuesX, step, y):
+    result = []
+
+    for i in range(len(valuesX)):
+        discr = 1 - step * 4 * (y + step * (valuesX[i] * valuesX[i]))
+
+        if (discr < 0):
+            break
+
+        y = (1 - sqrt(discr)) / (2 * step)
+        result.append(y)
+
+    return result
+\end{lstlisting}
+
