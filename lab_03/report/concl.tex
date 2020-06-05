@@ -1,0 +1,172 @@
+\chapter{Ответы на вопросы.}
+
+\textbf{Какие способы тестирования программы можно предложить?}
+
+Можно предложить три разных способа тестирования:
+\begin{itemize}
+    \item Ввести $F_0$  меньше нуля. Это означает, что съем тепла идет слева, поэтому температура будет увеличиваться от $0$ до $l$.
+    \item Ввести $F_0$  равным нулю. Это значит, что тепловое нагружение отсутствует, поэтому температура стержня будет везде равна температуре окружающей среды.
+    \item Увеличить значения коэффициента теплоотдачи в несколько раз, Это значит, что стержень будет отдавать больше тепла и скорость снижения температуры будет увеличена.
+\end{itemize}
+
+\textbf{Получите простейший аналог нелинейного краевого условия при}
+\begin{equation*}
+    x = l, -k(l) \frac{dT}{dx} = \alpha_N \big( T(l) - T_0 \big) + \varphi(T)
+\end{equation*}
+
+, где $\varphi(T)$ -- заданная функция. Производную аппроксимируйте односторонней разностью.
+
+Заменяем производную разностью
+
+\begin{equation*}
+    -k(l) \frac{T(x + h) - T(x)}{h} = \alpha_N \big( T(l) - T_0 \big) + \varphi(T)
+\end{equation*}
+
+При $x = l$ полуаем
+
+\begin{equation*}
+    -k(l) \frac{T(l) - T(l-1)}{h} = \alpha_N \big(T(l) - T_0 \big) +
+    \varphi \big(T(l) \big)
+\end{equation*}
+
+Заменим $k(l) = k_l, T(l) = T_l$
+
+\begin{equation*}
+    k_l T_{l-1} - k_l T_l = \alpha_N T_l h - \alpha_NT_0 h + \varphi(T_l) h
+\end{equation*}
+
+\begin{equation*}
+    \big( k_l + \alpha_N h \big) T_l - k_l T_{l-1} = \big( \alpha_NT_0 - \varphi(T_l) \big) h
+\end{equation*}
+
+\textbf{Опишите алгоритм применения метода прогонки, если при $x=0$ краевое условие линейное (как в настоящей работе), а при $x=l$, как в п.2.}
+
+
+\begin{equation*}
+    \begin{cases}
+        x = 0, -k(0) \frac{dT}{dx} = F_0 \\
+        x = l, -k(l) \frac{dT}{dx} = \alpha_N\big(T(l) - T_0\big) + \varphi(T) \\
+    \end{cases}
+\end{equation*}
+
+
+Поскольку краевое условие при $x=0$ линейное, то будем использовать правую прогонку.
+
+\begin{equation*}
+    y_n = \varepsilon_{n+1} y_{n+1} + \eta_{n+1}
+\end{equation*}
+
+Используем аппроксимацию первого порядка точности для краевого условия $x=0$
+
+\begin{equation*}
+    -k_0 \frac{T_1 - T_0}{h} = F_0
+\end{equation*}
+
+\begin{equation*}
+    T_0 - T_1 = \frac{F_0h}{k_0}
+\end{equation*}
+
+\begin{equation*}
+    \begin{cases}
+        K_0 = 1 \\
+        M_0 = -1 \\
+        P_0 = \frac{F_0h}{k_0} \\
+    \end{cases}
+\end{equation*}
+
+Разностная аппроксимация для краевого условия $x=l$ будет иметь вид
+
+\begin{equation*}
+    -k_l \frac{T_l - T_{l-1}}{h} = \alpha_N\big(T_l - T_0\big) + \varphi(T_l)
+\end{equation*}
+
+\begin{equation*}
+    k_lT_{l-1} + k_lT_l = \alpha_N T_l h - \alpha_NT_0 h + \varphi(T_l) h
+\end{equation*}
+
+\begin{equation*}
+    k_lT_{l-1} + (k_l - \alpha_Nh)T_l = \varphi(T_l)h - \alpha_NT_0h
+\end{equation*}
+
+\begin{equation*}
+    \begin{cases}
+        K_l = k_l - \alpha_Nh \\
+        M_l = k_l \\
+        P_l = \varphi(T_l)h - \alpha_NT_0h \\
+    \end{cases}
+\end{equation*}
+
+Начальные прогоночные коэффициенты будут равны
+
+\begin{equation*}
+    \begin{cases}
+        \varphi_1 = -\frac{M_0}{K_0} \\
+        \eta_1 = \frac{P_0}{K_0}
+    \end{cases}
+\end{equation*}
+
+Значение $T$ в точке $l$ будет равно
+
+\begin{equation*}
+    T_l = \frac{P_l - M_l \eta_l}{K_l + M_l \varepsilon_l}
+\end{equation*}
+
+\textbf{Опишите алгоритм определения единственного значения сеточной функции $y_p$ в одной заданной точке $p$. Использовать встречную прогонку, то есть комбинацию правой и левой прогонок. Краевые условия линейны.}
+
+
+Метод встречных прогонок подразумевает, что на промежутке $0 \le n \le p + 1$ будет использоваться правая прогонка, а на промежутке $p \le n \le N$ -- левая.
+
+Тогда коэффициенты для правой прогонки будут
+
+\begin{equation*}
+    \varepsilon_{n+1} = \frac{C_n}{B_n-A_n\varepsilon_n}
+\end{equation*}
+
+\begin{equation*}
+    \eta_{n+1} = \frac{D_n + A_n \eta_n}{B_n - A_n \varepsilon_n}
+\end{equation*}
+
+\begin{equation*}
+    0 \le n \le p+1
+\end{equation*}
+
+Для левой прогонки:
+
+\begin{equation*}
+    \xi_{n-1} = \frac{C_n}{B_n - A_n \xi_n}
+\end{equation*}
+
+\begin{equation*}
+    \pi_{n-1} = \frac{A_n\pi_n + D_n}{B_n - A_n\xi_n}
+\end{equation*}
+
+\begin{equation*}
+    p \le n \le N
+\end{equation*}
+
+Тогда
+
+\begin{equation*}
+    \begin{cases}
+        y_n = \varepsilon_{n+1}y_{n+1}+\eta_{n+1} \\
+        y_{n+1} = \xi_{n}y_{n} + \pi_{n} \\
+    \end{cases}
+\end{equation*}
+
+Подставим вместо $n$ $p$, получим
+
+\begin{equation*}
+    \begin{cases}
+        y_p = \varepsilon_{p+1}y_{p+1}+\eta_{p+1} \\
+        y_{p+1} = \xi_{p}y_{p} + \pi_{p} \\
+    \end{cases}
+\end{equation*}
+
+\begin{equation*}
+    y_p = \varepsilon_{p+1}\xi_py_p + \varepsilon_{p+1}\pi_p + \eta_{p+1}
+\end{equation*}
+
+\begin{equation*}
+    y_p = \frac{\varepsilon_{p+1}\pi_p + \eta_{p+1}}{1 - \varepsilon_{p+1}\xi_{p}}
+\end{equation*}
+

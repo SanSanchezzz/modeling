@@ -1,0 +1,225 @@
+\chapter{Теоретические сведения}
+
+\subsection{Исходные данные}
+
+\begin{equation*}
+    \begin{matrix}
+        K_0 = 0.4 \\
+        K_n = 0.1 \\
+        \alpha_0 = 0.05 \\
+        \alpha_n = 0.001 \\
+        l = 10 \\
+        T_0 = 300 \\
+        R = 0.5 \\
+        F_0 = 50 \\
+    \end{matrix}
+\end{equation*}
+
+\subsection{Уравнение для функции $T(x)$}
+
+\begin{equation}\label{eq:t(x)}
+    \frac{d}{dx} \bigg( k(x) \frac{dT}{dx} \bigg) - \frac{2}{R} \alpha(x)T +
+    \frac{2T_0}{R} \alpha(x) = 0
+\end{equation}
+
+\subsection{Краевые условия}
+
+\begin{equation*}
+    \begin{cases}
+        x = 0, -k(0) \frac{dT}{dx} = F_0, \\
+        x = l, -k(l) \frac{dT}{dx} = \alpha_N \big( T(l) - T_0 \big)
+    \end{cases}
+\end{equation*}
+
+Функция $k(x)$ представлена на формуле \ref{eq:k}
+
+\begin{equation}\label{eq:k}
+    k(x) = \frac{a}{x - b}
+\end{equation}
+
+, где
+
+\begin{equation*}
+    a = -K_0 b = \frac{K_0 K_n l}{K_0 - K_n}
+\end{equation*}
+
+\begin{equation*}
+    b = \frac{K_N l}{K_N - K_0}
+\end{equation*}
+
+Функция $\alpha(x)$ представлена на формуле \ref{eq:alpha}
+
+\begin{equation}\label{eq:alpha}
+    \alpha(x) = \frac{c}{x- d}
+\end{equation}
+
+, где
+
+\begin{equation*}
+    c = -\alpha_0d = \frac{\alpha_0 \alpha_N l}{\alpha_0 - \alpha_N}
+\end{equation*}
+
+\begin{equation*}
+    d = \frac{\alpha_n l}{\alpha_n - \alpha_0}
+\end{equation*}
+
+\subsection{Разностная схема}
+
+\begin{equation}\label{eq:main}
+    A_n y_{n+1} - B_n y_n + C_n y_{n-1} = -D_n, 1 \le n \le N-1
+\end{equation}
+
+\begin{equation}\label{eq:start_left}
+    K_0 y_0 + M_0 y_1 = P_0
+\end{equation}
+
+\begin{equation}\label{eq:start_right}
+    K_n y_n + M_n u_{n-1} = P_n
+\end{equation}
+
+\begin{equation*}
+    A_n = \frac{x_{n+\frac{1}{2}}}{h},\ C_n = \frac{x_{n-\frac{1}{2}}}{h},
+    \ B_n = A_n + C_n + p_n h,\ D_n = f_nh
+\end{equation*}
+
+Метод трапеций
+
+\begin{equation*}
+    x_{n \pm \frac{1}{2}} = \frac{2 k_n k_{n\pm1}}{k_n + k_{n\pm1}}
+\end{equation*}
+
+\subsection{Краевые условия}
+
+\begin{equation*}
+    F = -k(x)\frac{dT}{dx}
+\end{equation*}
+
+\begin{equation*}
+    p(x) = \frac{2}{R} \alpha(x)
+\end{equation*}
+
+\begin{equation*}
+    f(x) = \frac{2T_0}{R} \alpha(x)
+\end{equation*}
+
+\begin{equation*}
+    p_n = p(x_n), f_n = f(x_n)
+\end{equation*}
+
+Разностные аналоги кравевых условий при $x = 0$
+
+\begin{equation}\label{eq:left}
+    y_0 \cdot \bigg( x_{\frac{1}{2}} + \frac{h^2}{8} p_{\frac{1}{2}} +
+    \frac{h^2}{4}p_0 \bigg) - y_1 \cdot \bigg( x_{\frac{1}{2}} - \frac{h^2}{8}
+    p_{\frac{1}{2}} \bigg) = \bigg( hF_0 + \frac{h^2}{4} \big(f_\frac{1}{2}+
+    f_0 \big) \bigg)
+\end{equation}
+
+Для $p_\frac{1}{2}$ и $f_\frac{1}{2}$ можно принять простую аппроксимацию
+
+\begin{equation*}
+    p_\frac{1}{2} = \frac{p_0 + p_1}{2}
+\end{equation*}
+
+\begin{equation*}
+    f_\frac{1}{2} = \frac{f_0 + f_1}{2}
+\end{equation*}
+
+Разностные аналоги кравевых условий при $x = l$. Проинтегрируем \ref{eq:t(x)} на отрезке $\big[ x_n-\frac{1}{2}; x_n \big]$
+
+\begin{equation*}
+    -\int_{X_{n-\frac{1}{2}}}^{X_n} \frac{dF}{dx} dx -
+    \int_{X_{n-\frac{1}{2}}}^{X_n} p(x)T dx +
+    \int_{X_{n-\frac{1}{2}}}^{X_n} f(x) dx = 0
+\end{equation*}
+
+Второй и третий интегралы вычислим методом трапеций
+
+\begin{equation*}
+    F_{n-\frac{1}{2}} - F_n -
+    \frac{p_{n-\frac{1}{2}}y_{n-\frac{1}{2}} + p_ny_n}{4} h +
+    \frac{f_{n-\frac{1}{2}} + f_n}{4} h = 0
+\end{equation*}
+
+Подставим в полученное уравнение
+
+\begin{equation*}
+    F_{n-\frac{1}{2}} = x_{n-\frac{1}{2}} \frac{y_{n-1} - y_n}{h}
+\end{equation*}
+
+\begin{equation*}
+    F_n = \alpha_(y_n-T_0)
+\end{equation*}
+
+\begin{equation*}
+    y_{n-\frac{1}{2}} = \frac{y_n + Y_{n-1}}{2}
+\end{equation*}
+
+Получим
+
+\begin{equation*}
+    \frac{x_{n-\frac{1}{2}} y_{n-1}}{h} -
+    \frac{x_{n-\frac{1}{2}} y_{n}}{h} -
+    \alpha_ny_n +
+    \alpha_nT_0 -
+    \frac{p_{n-\frac{1}{2}} y_{n-1}}{8}h -
+    \frac{p_{n-\frac{1}{2}} y_{n}}{8}h -
+    \frac{p_{n}y_{n}}{4}h +
+    \frac{f_{n-\frac{1}{2}} + f_n}{4}h = 0
+\end{equation*}
+
+\begin{equation}\label{eq:right}
+    y_n \cdot \bigg( -\frac{x_{n-\frac{1}{2}}}{h} - \alpha_n -
+    \frac{p_n}{4}h - \frac{p_{n-\frac{1}{2}}}{8} h \bigg) +
+    y_{n-1} \cdot \bigg( \frac{x_{n-\frac{1}{2}}}{h} -
+    \frac{p_{n-\frac{1}{2}}}{8} h \bigg) = - \bigg(
+    \alpha_nT_0 + \frac{f_{n-\frac{1}{2}} + f_n}{4} h \bigg)
+\end{equation}
+
+С помощью формул \ref{eq:start_left} и \ref{eq:left} получаем коэффициенты
+$K_0$, $M_0$ и $P_0$, а с помощью \ref{eq:start_right} и \ref{eq:right} получаем
+$K_n$, $M_n$ и $P_n$.
+
+\subsection{Метод прогонки}
+
+Для решения системы из \ref{eq:main}, \ref{eq:start_left} и \ref{eq:start_right}
+используется метод прогонки, который состоит из двух этапов: прямой ход и
+обратный ход.
+
+\textbf{Прямой ход}
+
+Для коэффициентов $\varepsilon$ и $\eta$ нужны начальные значения
+(формулы \ref{eq:first_eps} и \ref{eq:first_eta}).
+
+\begin{equation}\label{eq:first_eps}
+    \varepsilon_1 = -\frac{M_0}{K_0}
+\end{equation}
+
+\begin{equation}\label{eq:first_eta}
+    \eta_1 = \frac{P_0}{K_0}
+\end{equation}
+
+Затем вычисляются остальные элементы массива прогоночных коэффициентов
+(формула \ref{eq:front_move}).
+
+\begin{equation}\label{eq:front_move}
+    y_n =
+    \underbrace{\frac{C_n}{B_n - A_n \varepsilon_n}}_{\varepsilon_{n+1}} y_{n+1} +
+    \underbrace{\frac{D_n + A_n \eta_n}{B_n - A_n \varepsilon_n}}_{\eta_{n+1}}
+\end{equation}
+
+\textbf{Обратный ход}
+
+По формуле \ref{eq:last_y} находим начальное значение $y_n$.
+
+\begin{equation}\label{eq:last_y}
+    y_n = \frac{P_n - M_n \eta_n}{K_n + M_n \varepsilon_n}
+\end{equation}
+
+Остальные значения находятся по формуле \ref{eq:back_move}.
+
+\begin{equation}\label{eq:back_move}
+    y_n = \varepsilon_{n+1} y_{n+1} + \eta_{n+1}
+\end{equation}
+
+Полученный массив $y$ будет искомый массив $T(x)$.
